@@ -8,10 +8,18 @@ public class Player : MonoBehaviour
     public float Damage;
     public float AtackSpeed;
     public float AttackRange = 2;
+    [SerializeField] private float _moveSpeed = 4;
+    [SerializeField] private float _rotationSpeed = 7.5f;
 
     private float lastAttackTime = 0;
     private bool isDead = false;
     public Animator AnimatorController;
+    private CharacterController _characterController;
+
+    private void Start()
+    {
+        _characterController = GetComponent<CharacterController>();
+    }
 
     private void Update()
     {
@@ -26,8 +34,10 @@ public class Player : MonoBehaviour
             return;
         }
 
+        Move(CalculateMovement());
+        AdjustMoveAnimator(CalculateMovement());
 
-        var enemies = SceneManager.Instance.Enemies;
+        /*var enemies = SceneManager.Instance.Enemies;
         Enemie closestEnemie = null;
 
         for (int i = 0; i < enemies.Count; i++)
@@ -69,7 +79,7 @@ public class Player : MonoBehaviour
                     AnimatorController.SetTrigger("Attack");
                 }
             }
-        }
+        }*/
     }
 
     private void Die()
@@ -80,5 +90,23 @@ public class Player : MonoBehaviour
         SceneManager.Instance.GameOver();
     }
 
+    private Vector3 CalculateMovement()
+    {
+        Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        movement = movement.normalized;
+        return movement;
+    }
+
+    private void Move(Vector3 movement)
+    {
+        if (movement == Vector3.zero) return;
+        _characterController.Move(movement * _moveSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(Quaternion.LookRotation(transform.forward), Quaternion.LookRotation(movement), _rotationSpeed * Time.deltaTime);
+    }
+
+    private void AdjustMoveAnimator(Vector3 direction)
+    {
+        AnimatorController.SetFloat("Speed", direction.magnitude);
+    }
 
 }
