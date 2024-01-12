@@ -10,7 +10,8 @@ public class Enemie : MonoBehaviour
     public float AtackSpeed;
     public float AttackRange = 2;
 
-
+    [SerializeField] private bool _isReccursiveSubtype;
+    [SerializeField] private GameObject _lesserEnemy;
     public Animator AnimatorController;
     public NavMeshAgent Agent;
 
@@ -22,7 +23,6 @@ public class Enemie : MonoBehaviour
     {
         SceneManager.Instance.AddEnemie(this);
         Agent.SetDestination(SceneManager.Instance.Player.transform.position);
-
     }
 
     private void Update()
@@ -60,10 +60,15 @@ public class Enemie : MonoBehaviour
 
     }
 
-
-
     private void Die()
     {
+        if (_isReccursiveSubtype)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Instantiate(_lesserEnemy, transform.position, Quaternion.identity);
+            }
+        }
         SceneManager.Instance.RemoveEnemie(this);
         isDead = true;
         AnimatorController.SetTrigger("Die");

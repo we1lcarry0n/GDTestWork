@@ -8,11 +8,17 @@ public class Player : MonoBehaviour
     public float Damage;
     public float AtackSpeed;
     public float AttackRange = 2;
-    [SerializeField] private float _moveSpeed = 4;
+    [SerializeField] private float _moveSpeed = 4f;
     [SerializeField] private float _rotationSpeed = 7.5f;
+    [SerializeField] private float _attackCooldown = 1f;
+    
+    [SerializeField] private float _superAttackMultiplier = 2f;
+    [SerializeField] public float SuperAttackCooldown = 2f;
 
     private float lastAttackTime = 0;
+    private bool _canAttack = true;
     private bool isDead = false;
+    private Enemie closestEnemie = null;
     public Animator AnimatorController;
     private CharacterController _characterController;
 
@@ -37,49 +43,12 @@ public class Player : MonoBehaviour
         Move(CalculateMovement());
         AdjustMoveAnimator(CalculateMovement());
 
-        /*var enemies = SceneManager.Instance.Enemies;
-        Enemie closestEnemie = null;
+        closestEnemie = CalculateClosestEnemy();
 
-        for (int i = 0; i < enemies.Count; i++)
+        if (!_canAttack)
         {
-            var enemie = enemies[i];
-            if (enemie == null)
-            {
-                continue;
-            }
-
-            if (closestEnemie == null)
-            {
-                closestEnemie = enemie;
-                continue;
-            }
-
-            var distance = Vector3.Distance(transform.position, enemie.transform.position);
-            var closestDistance = Vector3.Distance(transform.position, closestEnemie.transform.position);
-
-            if (distance < closestDistance)
-            {
-                closestEnemie = enemie;
-            }
-
+            TickAttackCooldown();
         }
-
-        if (closestEnemie != null)
-        {
-            var distance = Vector3.Distance(transform.position, closestEnemie.transform.position);
-            if (distance <= AttackRange)
-            {
-                if (Time.time - lastAttackTime > AtackSpeed)
-                {
-                    //transform.LookAt(closestEnemie.transform);
-                    transform.transform.rotation = Quaternion.LookRotation(closestEnemie.transform.position - transform.position);
-
-                    lastAttackTime = Time.time;
-                    closestEnemie.Hp -= Damage;
-                    AnimatorController.SetTrigger("Attack");
-                }
-            }
-        }*/
     }
 
     private void Die()
@@ -109,4 +78,92 @@ public class Player : MonoBehaviour
         AnimatorController.SetFloat("Speed", direction.magnitude);
     }
 
+    private Enemie CalculateClosestEnemy()
+    {
+        var enemies = SceneManager.Instance.Enemies;
+        Enemie closest = null;
+
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            var enemie = enemies[i];
+            if (enemie == null)
+            {
+                continue;
+            }
+
+            if (closest == null)
+            {
+                closest = enemie;
+                continue;
+            }
+
+            var distance = Vector3.Distance(transform.position, enemie.transform.position);
+            var closestDistance = Vector3.Distance(transform.position, closest.transform.position);
+
+            if (distance < closestDistance)
+            {
+                closest = enemie;
+            }
+
+        }
+        return closest;
+    }
+
+    public void TryAttack()
+    {
+        if (!_canAttack)
+        {
+            return;
+        }
+        if (closestEnemie != null)
+        {
+            TryDealDamage(Damage);
+        }
+        AnimatorController.SetTrigger("Attack");
+        _canAttack = false;
+        lastAttackTime = 0f;
+    }
+
+    public void TrySuperAttack()
+    {
+        if (!SceneManager.Instance.CanSuperAttack || !_canAttack)
+        {
+            return;
+        }
+        if (Vector3.Distance(transform.position, closestEnemie.transform.position) > AttackRange)
+        {
+            return;
+        }
+        if (closestEnemie != null)
+        {
+            TryDealDamage(Damage * _superAttackMultiplier);
+        }
+        AnimatorController.SetTrigger("SuperAttack");
+        SceneManager.Instance.InitiateSuperAttackCooldown();
+        _canAttack = false;
+        lastAttackTime = 0f;
+    }
+
+    private void TryDealDamage(float damage)
+    {
+        if (closestEnemie == null)
+        {
+            return;
+        }
+        if (Vector3.Distance(transform.position, closestEnemie.transform.position) > AttackRange)
+        {
+            return;
+        }
+        transform.rotation = Quaternion.LookRotation(closestEnemie.transform.position - transform.position);
+        closestEnemie.Hp -= damage;
+    }
+
+    private void TickAttackCooldown()
+    {
+        lastAttackTime += Time.deltaTime;
+        if (lastAttackTime >= _attackCooldown)
+        {
+            _canAttack = true;
+        }
+    }
 }
