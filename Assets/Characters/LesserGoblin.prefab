@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 664052003916300769, guid: 4c34fad82d8582f40a00c43d3128284a, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.0075
+      value: 0.01125
       objectReference: {fileID: 0}
     - target: {fileID: 664052003916300769, guid: 4c34fad82d8582f40a00c43d3128284a, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.0075
+      value: 0.01125
       objectReference: {fileID: 0}
     - target: {fileID: 664052003916300769, guid: 4c34fad82d8582f40a00c43d3128284a, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.0075
+      value: 0.01125
       objectReference: {fileID: 0}
     - target: {fileID: 664052003916300769, guid: 4c34fad82d8582f40a00c43d3128284a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 664052003916300769, guid: 4c34fad82d8582f40a00c43d3128284a, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 977492468783751975, guid: 4c34fad82d8582f40a00c43d3128284a, type: 3}
       propertyPath: Hp
       value: 1
@@ -74,6 +78,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 977492468783751975, guid: 4c34fad82d8582f40a00c43d3128284a, type: 3}
       propertyPath: AttackRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 977492468783751975, guid: 4c34fad82d8582f40a00c43d3128284a, type: 3}
+      propertyPath: _healPlayerOnDeath
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 977492468783751975, guid: 4c34fad82d8582f40a00c43d3128284a, type: 3}

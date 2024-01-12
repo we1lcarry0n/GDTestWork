@@ -9,6 +9,7 @@ public class Enemie : MonoBehaviour
     public float Damage;
     public float AtackSpeed;
     public float AttackRange = 2;
+    [SerializeField] private float _healPlayerOnDeath;
 
     [SerializeField] private bool _isReccursiveSubtype;
     [SerializeField] private GameObject _lesserEnemy;
@@ -19,7 +20,7 @@ public class Enemie : MonoBehaviour
     private bool isDead = false;
 
 
-    private void Start()
+    private void OnEnable()
     {
         SceneManager.Instance.AddEnemie(this);
         Agent.SetDestination(SceneManager.Instance.Player.transform.position);
@@ -53,6 +54,7 @@ public class Enemie : MonoBehaviour
         }
         else
         {
+            Agent.isStopped = false;
             Agent.SetDestination(SceneManager.Instance.Player.transform.position);
         }
         AnimatorController.SetFloat("Speed", Agent.speed); 
@@ -69,6 +71,7 @@ public class Enemie : MonoBehaviour
                 Instantiate(_lesserEnemy, transform.position, Quaternion.identity);
             }
         }
+        SceneManager.Instance.AddHealthToPlayer(_healPlayerOnDeath);
         SceneManager.Instance.RemoveEnemie(this);
         isDead = true;
         AnimatorController.SetTrigger("Die");

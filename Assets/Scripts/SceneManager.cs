@@ -70,6 +70,12 @@ public class SceneManager : MonoBehaviour
         Lose.SetActive(true);
     }
 
+    public void AddHealthToPlayer(float healthAmount)
+    {
+        Player.Hp += healthAmount;
+        Debug.Log(Player.Hp);
+    }
+
     private void SpawnWave()
     {
         if (currWave >= Config.Waves.Length)
@@ -77,7 +83,7 @@ public class SceneManager : MonoBehaviour
             Win.SetActive(true);
             return;
         }
-        _wavesInfoText.text = string.Format("Wave : {0} / 3", currWave + 1);
+        _wavesInfoText.text = string.Format("Wave : {0} / {1}", currWave + 1, Config.Waves.Length);
 
         var wave = Config.Waves[currWave];
         foreach (var character in wave.Characters)

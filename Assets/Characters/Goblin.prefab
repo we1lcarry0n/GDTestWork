@@ -102,6 +102,10 @@ MonoBehaviour:
   Hp: 2
   Damage: 1
   AtackSpeed: 1
+  AttackRange: 2
+  _healPlayerOnDeath: 2
+  _isReccursiveSubtype: 0
+  _lesserEnemy: {fileID: 0}
   AnimatorController: {fileID: 7475179364339281051}
   Agent: {fileID: 8767279960998370427}
 --- !u!195 &8767279960998370427

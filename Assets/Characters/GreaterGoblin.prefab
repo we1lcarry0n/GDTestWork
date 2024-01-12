@@ -103,6 +103,7 @@ MonoBehaviour:
   Damage: 1
   AtackSpeed: 1
   AttackRange: 2.5
+  _healPlayerOnDeath: 4
   _isReccursiveSubtype: 1
   _lesserEnemy: {fileID: 5993931037940881041, guid: b03175340983b714dbfee5741b160b24, type: 3}
   AnimatorController: {fileID: 7475179364339281051}
